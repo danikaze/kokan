@@ -1,0 +1,10 @@
+{
+  "log": {
+    "level": "error",
+    "silent": false,
+    "console": false,
+    "outputFolder": "logs",
+    "outputFile": "%DATE%.log",
+    "maxFiles": 30
+  }
+}
