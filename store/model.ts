@@ -1,6 +1,12 @@
 import { Settings } from '../utils/settings/index.d';
 
-export type Page = 'home' | 'trip' | 'newTrip' | 'editTrip' | 'settings';
+export type Page =
+  | 'home'
+  | 'trip'
+  | 'newTrip'
+  | 'editTrip'
+  | 'settings'
+  | 'error';
 export type Lang = 'en' | 'es';
 
 export interface Ui {

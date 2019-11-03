@@ -23,6 +23,7 @@ import {
   getIsTravelListOpen,
   getCurrentPage,
 } from '../store/selectors';
+import { Link } from './link';
 
 const useStyles = makeStyles(theme => ({
   menuList: {
@@ -62,7 +63,11 @@ function BaseAppMenu(): JSX.Element {
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary="Home" />
+          <ListItemText>
+            <Link href="/" page="home">
+              <a>Home</a>
+            </Link>
+          </ListItemText>
         </ListItem>
 
         <ListItem
@@ -83,7 +88,11 @@ function BaseAppMenu(): JSX.Element {
               <ListItemIcon>
                 <AddIcon />
               </ListItemIcon>
-              <ListItemText primary="Create new..." />
+              <ListItemText>
+                <Link href="/new-trip" page="newTrip">
+                  <a>Add new...</a>
+                </Link>
+              </ListItemText>
             </ListItem>
             {getTravelList()}
           </List>

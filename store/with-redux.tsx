@@ -39,7 +39,9 @@ export const withRedux = (
     WithRedux.getInitialProps = async context => {
       // Get or Create the store with `undefined` as initialState
       // This allows you to set a custom default initialState
-      const reduxStore = getOrInitializeStore(getInitialState());
+      const reduxStore = getOrInitializeStore(
+        getInitialState(context.pathname)
+      );
 
       // Provide the store to getInitialProps of pages
       context.reduxStore = reduxStore;

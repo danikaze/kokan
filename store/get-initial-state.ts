@@ -1,6 +1,11 @@
-import { State } from './model';
+import { State, Page } from './model';
 
-export function getInitialState(): State {
+const urlMappings: { [pathname: string]: Page } = {
+  '/': 'home',
+  '/new-trip': 'newTrip',
+};
+
+export function getInitialState(pathname: string): State {
   let settings;
 
   if (IS_SERVER) {
@@ -13,7 +18,7 @@ export function getInitialState(): State {
     userSettings: {
       gps: false,
     },
-    currentPage: 'home',
+    currentPage: urlMappings[pathname] || 'error',
     ui: {
       menu: {
         isOpen: false,
