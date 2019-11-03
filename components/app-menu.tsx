@@ -34,6 +34,10 @@ const useStyles = makeStyles(theme => ({
     minWidth: 250,
     backgroundColor: theme.palette.background.paper,
   },
+  listLink: {
+    textDecoration: 'none',
+    color: 'inherit',
+  },
 }));
 
 function BaseAppMenu(): JSX.Element {
@@ -59,16 +63,16 @@ function BaseAppMenu(): JSX.Element {
   return (
     <Drawer open={isMenuOpen} onClose={handleMenuClose}>
       <List className={classes.root}>
-        <ListItem button selected={currentPage === 'home'}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText>
-            <Link href="/" page="home">
-              <a>Home</a>
-            </Link>
-          </ListItemText>
-        </ListItem>
+        <Link href="/" page="home">
+          <a className={classes.listLink}>
+            <ListItem button selected={currentPage === 'home'}>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText>Home</ListItemText>
+            </ListItem>
+          </a>
+        </Link>
 
         <ListItem
           button
@@ -84,16 +88,20 @@ function BaseAppMenu(): JSX.Element {
 
         <Collapse in={isTravelListOpen}>
           <List disablePadding>
-            <ListItem key="add-new" button>
-              <ListItemIcon>
-                <AddIcon />
-              </ListItemIcon>
-              <ListItemText>
-                <Link href="/new-trip" page="newTrip">
-                  <a>Add new...</a>
-                </Link>
-              </ListItemText>
-            </ListItem>
+            <Link href="/new-trip" page="newTrip">
+              <a className={classes.listLink}>
+                <ListItem
+                  key="add-new"
+                  button
+                  selected={currentPage === 'newTrip'}
+                >
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                  <ListItemText>Add new...</ListItemText>
+                </ListItem>
+              </a>
+            </Link>
             {getTravelList()}
           </List>
         </Collapse>
