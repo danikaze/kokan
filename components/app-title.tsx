@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   AppBar,
   Typography,
@@ -25,9 +26,11 @@ function BaseAppTitle(): JSX.Element {
   const dispatch = useDispatch();
   const classes = useStyles({});
 
-  function handleMenuButtonClick() {
-    dispatch(toggleMenu());
-  }
+  const handleMenuButtonClick = useMemo(() => {
+    return () => {
+      dispatch(toggleMenu());
+    };
+  }, []);
 
   return (
     <AppBar position="static">
