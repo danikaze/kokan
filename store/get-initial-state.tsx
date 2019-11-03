@@ -11,7 +11,10 @@ export function getInitialState(): State {
     settings,
     lang: 'en',
     ui: {
-      menuOpen: false,
+      menu: {
+        isOpen: false,
+        travelListOpen: true,
+      },
     },
   };
 }
