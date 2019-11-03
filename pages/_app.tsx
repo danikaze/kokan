@@ -13,6 +13,7 @@ import { State } from '../store/model';
 import { mainReducer } from '../store/reducers';
 import { cleanStateForClient } from '../store/clean-state-for-client';
 import { theme } from '../utils/theme';
+import { APP_TITLE } from '../constants/app';
 
 const NEXT_STORE_GLOBAL_VAR = '__NEXT_STORE__';
 
@@ -112,7 +113,7 @@ class Main extends App<Props, PageInitialProps> {
     return (
       <>
         <Head>
-          <title>Kōkan</title>
+          <title>{APP_TITLE}</title>
         </Head>
         <ThemeProvider theme={theme}>
           <CssBaseline />

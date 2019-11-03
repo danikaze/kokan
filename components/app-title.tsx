@@ -10,6 +10,7 @@ import { theme } from '../utils/theme';
 import { withTranslation } from '../utils/i18n';
 import { toggleMenu } from '../store/actions/ui';
 import { useDispatch } from 'react-redux';
+import { APP_TITLE } from '../constants/app';
 
 const useStyles = makeStyles({
   hamburger: {
@@ -40,9 +41,8 @@ function BaseAppTitle(): JSX.Element {
         >
           <MenuIcon />
         </IconButton>
-
-        <Typography className={classes.title} variant="h6">
-          Kōkan
+        <Typography className={classes.title} variant="h6" display="inline">
+          {APP_TITLE} {PACKAGE_VERSION}
         </Typography>
       </Toolbar>
     </AppBar>
