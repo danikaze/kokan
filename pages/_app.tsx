@@ -8,6 +8,8 @@ import { appWithTranslation } from '../utils/i18n';
 import { init as initLogger, getLogger } from '../utils/logger';
 import { theme } from '../utils/theme';
 import { APP_TITLE } from '../constants/app';
+import { Store, Action } from 'redux';
+import { State } from '../store/model';
 
 if (IS_SERVER) {
   initServer();
@@ -15,6 +17,7 @@ if (IS_SERVER) {
 
 interface Props {
   Component: PageComponent;
+  reduxStore: Store<State, Action>;
 }
 
 /**
@@ -49,7 +52,7 @@ class Main extends App<Props, PageInitialProps> {
 
     return {
       pageProps: {
-        namespacesRequired: ['template'],
+        namespacesRequired: [],
         ...pageProps,
       },
     };

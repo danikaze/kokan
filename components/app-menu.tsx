@@ -15,6 +15,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CardTravelIcon from '@material-ui/icons/CardTravel';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { WithTranslation } from 'react-i18next';
 import { withTranslation } from '../utils/i18n';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleMenu, toggleTravelList } from '../store/actions/ui';
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function BaseAppMenu(): JSX.Element {
+function BaseAppMenu({ t }: WithTranslation): JSX.Element {
   const isMenuOpen = useSelector(getIsMenuOpen);
   const isTravelListOpen = useSelector(getIsTravelListOpen);
   const currentPage = useSelector(getCurrentPage);
@@ -69,7 +70,7 @@ function BaseAppMenu(): JSX.Element {
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
-              <ListItemText>Home</ListItemText>
+              <ListItemText primary={t('home')} />
             </ListItem>
           </a>
         </Link>
@@ -82,7 +83,7 @@ function BaseAppMenu(): JSX.Element {
           <ListItemIcon>
             <CardTravelIcon />
           </ListItemIcon>
-          <ListItemText primary="Trips" />
+          <ListItemText primary={t('trips')} />
           {isTravelListOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </ListItem>
 
@@ -98,7 +99,7 @@ function BaseAppMenu(): JSX.Element {
                   <ListItemIcon>
                     <AddIcon />
                   </ListItemIcon>
-                  <ListItemText>Add new...</ListItemText>
+                  <ListItemText primary={t('addNew')} />
                 </ListItem>
               </a>
             </Link>
@@ -114,7 +115,7 @@ function BaseAppMenu(): JSX.Element {
           <ListItemIcon>
             <SettingsIcon />
           </ListItemIcon>
-          <ListItemText primary="Settings" />
+          <ListItemText primary={t('settings')} />
         </ListItem>
       </List>
     </Drawer>
@@ -129,4 +130,4 @@ function getTravelList(): JSX.Element[] {
   ));
 }
 
-export const AppMenu = withTranslation('title')(BaseAppMenu);
+export const AppMenu = withTranslation('app-menu')(BaseAppMenu);
