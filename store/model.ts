@@ -3,7 +3,10 @@ import { Settings } from '../utils/settings/index.d';
 export type Lang = 'en' | 'es';
 
 export interface Ui {
-  menuOpen: boolean;
+  menu: {
+    isOpen: boolean;
+    travelListOpen: boolean;
+  };
 }
 
 export interface State {
