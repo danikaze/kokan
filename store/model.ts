@@ -1,5 +1,6 @@
 import { Settings } from '../utils/settings/index.d';
 
+export type Page = 'home' | 'trip' | 'newTrip' | 'editTrip' | 'settings';
 export type Lang = 'en' | 'es';
 
 export interface Ui {
@@ -12,5 +13,6 @@ export interface Ui {
 export interface State {
   lang: Lang;
   settings: Settings;
+  currentPage: Page;
   ui: Ui;
 }

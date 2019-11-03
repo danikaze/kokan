@@ -9,7 +9,7 @@ import {
 
 import { PageComponent } from '../interfaces';
 import { AppTitle } from '../components/app-title';
-import { Menu } from '../components/menu';
+import { AppMenu } from '../components/app-menu';
 
 const CustomCard = styled(Card)({
   minWidth: 275,
@@ -22,7 +22,7 @@ const IndexPage: PageComponent = function IndexPage() {
   return (
     <>
       <AppTitle />
-      <Menu />
+      <AppMenu />
 
       <Container>
         <CustomCard>

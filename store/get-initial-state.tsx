@@ -10,6 +10,7 @@ export function getInitialState(): State {
   return {
     settings,
     lang: 'en',
+    currentPage: 'home',
     ui: {
       menu: {
         isOpen: false,
