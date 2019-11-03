@@ -8,15 +8,20 @@ import {
   ListItemText,
   ListItemIcon,
 } from '@material-ui/core';
+import HomeIcon from '@material-ui/icons/Home';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CardTravelIcon from '@material-ui/icons/CardTravel';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { withTranslation } from '../utils/i18n';
-import { State } from '../store/model';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleMenu, toggleTravelList } from '../store/actions/ui';
+import {
+  getIsMenuOpen,
+  getIsTravelListOpen,
+  getCurrentPage,
+} from '../store/selectors';
 
 const useStyles = makeStyles(theme => ({
   menuList: {
@@ -29,11 +34,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function BaseMenu(): JSX.Element {
-  const isMenuOpen = useSelector((state: State) => state.ui.menu.isOpen);
-  const isTravelListOpen = useSelector(
-    (state: State) => state.ui.menu.travelListOpen
-  );
+function BaseAppMenu(): JSX.Element {
+  const isMenuOpen = useSelector(getIsMenuOpen);
+  const isTravelListOpen = useSelector(getIsTravelListOpen);
+  const currentPage = useSelector(getCurrentPage);
+
   const dispatch = useDispatch();
   const classes = useStyles(undefined);
 
@@ -48,13 +53,25 @@ function BaseMenu(): JSX.Element {
   return (
     <Drawer open={isMenuOpen} onClose={handleMenuClose}>
       <List className={classes.root}>
-        <ListItem button onClick={handleTravelListToggle}>
+        <ListItem button selected={currentPage === 'home'}>
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+
+        <ListItem
+          button
+          onClick={handleTravelListToggle}
+          selected={currentPage === 'trip'}
+        >
           <ListItemIcon>
             <CardTravelIcon />
           </ListItemIcon>
-          <ListItemText primary="Travels" />
+          <ListItemText primary="Trips" />
           {isTravelListOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </ListItem>
+
         <Collapse in={isTravelListOpen}>
           <List disablePadding>
             <ListItem key="add-new" button>
@@ -67,9 +84,11 @@ function BaseMenu(): JSX.Element {
           </List>
         </Collapse>
       </List>
+
       <Divider />
+
       <List>
-        <ListItem button>
+        <ListItem button selected={currentPage === 'settings'}>
           <ListItemIcon>
             <SettingsIcon />
           </ListItemIcon>
@@ -88,4 +107,4 @@ function getTravelList(): JSX.Element[] {
   ));
 }
 
-export const Menu = withTranslation('title')(BaseMenu);
+export const AppMenu = withTranslation('title')(BaseAppMenu);
