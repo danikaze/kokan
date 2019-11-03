@@ -7,6 +7,7 @@ import {
   Container,
 } from '@material-ui/core';
 
+import { withRedux } from '../store/with-redux';
 import { PageComponent } from '../interfaces';
 import { AppTitle } from '../components/app-title';
 import { AppMenu } from '../components/app-menu';
@@ -18,7 +19,7 @@ const CustomCard = styled(Card)({
 /**
  * Index page
  */
-const IndexPage: PageComponent = function IndexPage() {
+const IndexPage: PageComponent = () => {
   return (
     <>
       <AppTitle />
@@ -35,4 +36,4 @@ const IndexPage: PageComponent = function IndexPage() {
   );
 };
 
-export default IndexPage;
+export default withRedux(IndexPage);

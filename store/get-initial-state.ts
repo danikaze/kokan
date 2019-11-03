@@ -10,6 +10,9 @@ export function getInitialState(): State {
   return {
     settings,
     lang: 'en',
+    userSettings: {
+      gps: false,
+    },
     currentPage: 'home',
     ui: {
       menu: {
@@ -17,5 +20,6 @@ export function getInitialState(): State {
         travelListOpen: true,
       },
     },
+    travels: [],
   };
 }
