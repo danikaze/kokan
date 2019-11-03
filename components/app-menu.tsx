@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   Drawer,
   List,
@@ -42,13 +43,17 @@ function BaseAppMenu(): JSX.Element {
   const dispatch = useDispatch();
   const classes = useStyles(undefined);
 
-  function handleMenuClose() {
-    dispatch(toggleMenu());
-  }
+  const handleMenuClose = useMemo(() => {
+    return () => {
+      dispatch(toggleMenu());
+    };
+  }, []);
 
-  function handleTravelListToggle() {
-    dispatch(toggleTravelList());
-  }
+  const handleTravelListToggle = useMemo(() => {
+    return () => {
+      dispatch(toggleTravelList());
+    };
+  }, []);
 
   return (
     <Drawer open={isMenuOpen} onClose={handleMenuClose}>
