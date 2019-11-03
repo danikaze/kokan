@@ -52,4 +52,4 @@ function BaseAppTitle(): JSX.Element {
   );
 }
 
-export const AppTitle = withTranslation('title')(BaseAppTitle);
+export const AppTitle = withTranslation('app-title')(BaseAppTitle);
