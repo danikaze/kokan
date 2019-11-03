@@ -2,12 +2,13 @@ import { Reducer } from 'react';
 import { State } from '../model';
 import { Action } from '../actions';
 import { i18nReducer } from './i18n';
+import { uiReducer } from './ui';
 
 /**
  * List of partial reducers to aply (in order).
  * All of the reducers defined here will receive the same data, but it allows splitting the code
  */
-const reducerList: Reducer<State, Action>[] = [i18nReducer];
+const reducerList: Reducer<State, Action>[] = [i18nReducer, uiReducer];
 
 /**
  * This function will "combine" all the defined reducers in `reducerList`.

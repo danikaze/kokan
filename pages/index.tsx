@@ -4,10 +4,12 @@ import {
   CardContent,
   Typography,
   styled,
-  AppBar,
+  Container,
 } from '@material-ui/core';
 
 import { PageComponent } from '../interfaces';
+import { AppTitle } from '../components/app-title';
+import { Menu } from '../components/menu';
 
 const CustomCard = styled(Card)({
   minWidth: 275,
@@ -19,15 +21,16 @@ const CustomCard = styled(Card)({
 const IndexPage: PageComponent = function IndexPage() {
   return (
     <>
-      <AppBar position='sticky'>
-        <Typography>Kōkan</Typography>
-      </AppBar>
+      <AppTitle />
+      <Menu />
 
-      <CustomCard>
-        <CardContent>
-          <Typography>Set up!</Typography>
-        </CardContent>
-      </CustomCard>
+      <Container>
+        <CustomCard>
+          <CardContent>
+            <Typography>Set up!</Typography>
+          </CardContent>
+        </CustomCard>
+      </Container>
     </>
   );
 };
