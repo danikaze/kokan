@@ -10,5 +10,8 @@ export function getInitialState(): State {
   return {
     settings,
     lang: 'en',
+    ui: {
+      menuOpen: false,
+    },
   };
 }
