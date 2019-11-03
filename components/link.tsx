@@ -21,4 +21,3 @@ export function Link(props: Props) {
     </span>
   );
 }
-
