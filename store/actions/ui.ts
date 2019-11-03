@@ -1,19 +1,19 @@
 import { Action } from 'redux';
 import { ThunkActionCreator } from '../../interfaces';
 
-export type UiAction = ToggleMenu | ToggleTravelList;
+export type UiAction = ToggleMenuAction | ToggleTravelListAction;
 
-export interface ToggleMenu extends Action {
+export interface ToggleMenuAction extends Action {
   type: 'TOGGLE_MENU';
   isOpen: boolean;
 }
 
-export interface ToggleTravelList extends Action {
+export interface ToggleTravelListAction extends Action {
   type: 'TOGGLE_TRAVEL_LIST';
   isOpen: boolean;
 }
 
-export const toggleMenu: ThunkActionCreator<ToggleMenu> = () => {
+export const toggleMenu: ThunkActionCreator<ToggleMenuAction> = () => {
   return (dispatch, getState) => {
     dispatch({
       type: 'TOGGLE_MENU',
@@ -22,7 +22,9 @@ export const toggleMenu: ThunkActionCreator<ToggleMenu> = () => {
   };
 };
 
-export const toggleTravelList: ThunkActionCreator<ToggleTravelList> = () => {
+export const toggleTravelList: ThunkActionCreator<
+  ToggleTravelListAction
+> = () => {
   return (dispatch, getState) => {
     dispatch({
       type: 'TOGGLE_TRAVEL_LIST',
