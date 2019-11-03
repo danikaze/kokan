@@ -1,8 +1,10 @@
+const packageJson = require('./package.json');
+
 const withTypeScript = require('@zeit/next-typescript');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 
 let config = {
-  exportPathMap: async function () {
+  exportPathMap: async function() {
     return {
       '/': { page: '/index' },
     };
@@ -14,10 +16,14 @@ let config = {
       __filename: false,
     };
 
-    config.plugins.push(new webpack.DefinePlugin({
-      IS_SERVER: isServer,
-      IS_PRODUCTION: process.env.NODE_ENV === 'production',
-    }));
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        PACKAGE_NAME: JSON.stringify(packageJson.name),
+        PACKAGE_VERSION: JSON.stringify(packageJson.version),
+        IS_SERVER: isServer,
+        IS_PRODUCTION: process.env.NODE_ENV === 'production',
+      })
+    );
 
     config.module.rules.push({
       test: /\.(png|jpg|gif)$/i,
@@ -48,12 +54,12 @@ config = withBundleAnalyzer({
   bundleAnalyzerConfig: {
     server: {
       analyzerMode: 'static',
-      reportFilename: '../analyzer/server.html'
+      reportFilename: '../analyzer/server.html',
     },
     browser: {
       analyzerMode: 'static',
-      reportFilename: 'analyzer/client.html'
-    }
+      reportFilename: 'analyzer/client.html',
+    },
   },
 });
 
