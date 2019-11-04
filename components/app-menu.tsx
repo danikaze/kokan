@@ -23,9 +23,10 @@ import {
   getIsMenuOpen,
   getIsTravelListOpen,
   getCurrentPage,
+  getTrips,
 } from '../store/selectors';
 import { Link } from './link';
-import { Page } from '../store/model';
+import { Page, Trip } from '../store/model';
 
 const useStyles = makeStyles(theme => ({
   menuList: {
@@ -54,6 +55,7 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
   const isMenuOpen = useSelector(getIsMenuOpen);
   const isTravelListOpen = useSelector(getIsTravelListOpen);
   const currentPage = useSelector(getCurrentPage);
+  const trips = useSelector(getTrips);
 
   const dispatch = useDispatch();
   const classes = useStyles(undefined);
@@ -103,7 +105,7 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
               icon={<AddIcon />}
             />
 
-            {getTravelList()}
+            {getTripList(trips)}
           </List>
         </Collapse>
       </List>
@@ -144,10 +146,10 @@ function LinkItem({
   );
 }
 
-function getTravelList(): JSX.Element[] {
-  return ['San Francisco', 'Bangkok', 'Stockholm'].map((text, i) => (
-    <ListItem key={i} button>
-      <ListItemText inset primary={text} />
+function getTripList(trips: Trip[]): JSX.Element[] {
+  return trips.map(trip => (
+    <ListItem key={trip.id} button>
+      <ListItemText inset primary={trip.name} />
     </ListItem>
   ));
 }

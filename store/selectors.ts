@@ -13,3 +13,8 @@ export const getCurrentPage = (state: State) => state.currentPage;
  */
 export const getLanguage = (state: State) => state.userSettings.lang;
 export const getIsGpsAllowed = (state: State) => state.userSettings.gps;
+
+/*
+ * Trips
+ */
+export const getTrips = (state: State) => state.trips;

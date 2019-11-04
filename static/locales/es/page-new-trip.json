@@ -1,3 +1,7 @@
 {
-  "pageTitle": "Añadir nuevo viaje"
+  "pageTitle": "Añadir nuevo viaje",
+  "tripName": "Nombre del viaje",
+  "timeOffset": "Diferencia horaria",
+  "addButton": "Guardar viaje",
+  "addedFeedback": "¡Nuevo viaje añadido!"
 }
