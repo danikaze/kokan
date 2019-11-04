@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
 import { State } from '../model';
 import { Action } from '../actions';
-import { i18nReducer } from './i18n';
+import { settingsReducer } from './settings';
 import { uiReducer } from './ui';
 import { navReducer } from './nav';
 
@@ -10,7 +10,7 @@ import { navReducer } from './nav';
  * All of the reducers defined here will receive the same data, but it allows splitting the code
  */
 const reducerList: Reducer<State, Action>[] = [
-  i18nReducer,
+  settingsReducer,
   uiReducer,
   navReducer,
 ];

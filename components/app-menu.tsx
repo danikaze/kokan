@@ -25,6 +25,7 @@ import {
   getCurrentPage,
 } from '../store/selectors';
 import { Link } from './link';
+import { Page } from '../store/model';
 
 const useStyles = makeStyles(theme => ({
   menuList: {
@@ -40,6 +41,14 @@ const useStyles = makeStyles(theme => ({
     color: 'inherit',
   },
 }));
+
+interface LinkItemProps {
+  page: Page;
+  currentPage: Page;
+  href: string;
+  primary: string;
+  icon: JSX.Element;
+}
 
 function BaseAppMenu({ t }: WithTranslation): JSX.Element {
   const isMenuOpen = useSelector(getIsMenuOpen);
@@ -64,16 +73,13 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
   return (
     <Drawer open={isMenuOpen} onClose={handleMenuClose}>
       <List className={classes.root}>
-        <Link href="/" page="home">
-          <a className={classes.listLink}>
-            <ListItem button selected={currentPage === 'home'}>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('home')} />
-            </ListItem>
-          </a>
-        </Link>
+        <LinkItem
+          href="/"
+          page="home"
+          currentPage={currentPage}
+          primary={t('home')}
+          icon={<HomeIcon />}
+        />
 
         <ListItem
           button
@@ -89,20 +95,14 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
 
         <Collapse in={isTravelListOpen}>
           <List disablePadding>
-            <Link href="/new-trip" page="newTrip">
-              <a className={classes.listLink}>
-                <ListItem
-                  key="add-new"
-                  button
-                  selected={currentPage === 'newTrip'}
-                >
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={t('addNew')} />
-                </ListItem>
-              </a>
-            </Link>
+            <LinkItem
+              href="/new-trip"
+              page="newTrip"
+              currentPage={currentPage}
+              primary={t('addNew')}
+              icon={<AddIcon />}
+            />
+
             {getTravelList()}
           </List>
         </Collapse>
@@ -111,14 +111,36 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
       <Divider />
 
       <List>
-        <ListItem button selected={currentPage === 'settings'}>
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary={t('settings')} />
-        </ListItem>
+        <LinkItem
+          href="/settings"
+          page="settings"
+          currentPage={currentPage}
+          primary={t('settings')}
+          icon={<SettingsIcon />}
+        />
       </List>
     </Drawer>
+  );
+}
+
+function LinkItem({
+  href,
+  page,
+  currentPage,
+  primary,
+  icon,
+}: LinkItemProps): JSX.Element {
+  const classes = useStyles(undefined);
+
+  return (
+    <Link href={href} page={page}>
+      <a className={classes.listLink}>
+        <ListItem button selected={currentPage === page}>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText primary={primary} />
+        </ListItem>
+      </a>
+    </Link>
   );
 }
 

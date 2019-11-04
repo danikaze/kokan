@@ -9,6 +9,11 @@ export type Page =
   | 'error';
 export type Lang = 'en' | 'es';
 
+export interface UserSettings {
+  lang: Lang;
+  gps: boolean;
+}
+
 export interface Ui {
   menu: {
     isOpen: boolean;
@@ -17,8 +22,8 @@ export interface Ui {
 }
 
 export interface State {
-  lang: Lang;
   settings: Settings;
+  userSettings: UserSettings;
   currentPage: Page;
   ui: Ui;
 }

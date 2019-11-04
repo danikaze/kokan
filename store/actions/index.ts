@@ -1,5 +1,5 @@
-import { I18nAction } from './i18n';
+import { SettingAction } from './settings';
 import { UiAction } from './ui';
 import { NavAction } from './nav';
 
-export type Action = I18nAction | UiAction | NavAction;
+export type Action = SettingAction | UiAction | NavAction;

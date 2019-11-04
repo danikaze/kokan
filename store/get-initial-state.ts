@@ -14,8 +14,8 @@ export function getInitialState(pathname: string): State {
 
   return {
     settings,
-    lang: 'en',
     userSettings: {
+      lang: 'en',
       gps: false,
     },
     currentPage: urlMappings[pathname] || 'error',
