@@ -13,7 +13,7 @@ import { withRedux } from '../store/with-redux';
 import { AppTitle } from '../components/app-title';
 import { AppMenu } from '../components/app-menu';
 import { PageTitle } from '../components/page-title';
-import { languages } from '../constants/app';
+import { LANGUAGES } from '../constants/app';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLanguage, setSetting } from '../store/actions/settings';
 import { getIsGpsAllowed, getLanguage } from '../store/selectors';
@@ -97,9 +97,9 @@ const SettingsPage: PageComponent = ({ t }) => {
 };
 
 function renderLangOptions(): JSX.Element[] {
-  return Object.keys(languages).map(lang => (
+  return Object.keys(LANGUAGES).map(lang => (
     <MenuItem key={lang} value={lang}>
-      {languages[lang]}
+      {LANGUAGES[lang]}
     </MenuItem>
   ));
 }

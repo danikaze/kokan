@@ -8,6 +8,7 @@ import { PageTitle } from '../components/page-title';
 import { useDispatch } from 'react-redux';
 import { addNewTrip } from '../store/actions/trips';
 import { createRef, useState } from 'react';
+import { snackBarDuration as SNACKBAR_DURATION } from '../constants/app';
 
 function useNewTripForm() {
   let valid = true;
@@ -88,7 +89,7 @@ const NewTripPage: PageComponent = function NewTripPage({ t }) {
         <Snackbar
           open={showSnackBar}
           onClose={hideSnackbar}
-          autoHideDuration={3000}
+          autoHideDuration={SNACKBAR_DURATION}
           ContentProps={{ 'aria-describedby': 'message-id' }}
           message={<span id="message-id">{t('addedFeedback')}</span>}
         />
