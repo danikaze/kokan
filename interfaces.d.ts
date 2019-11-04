@@ -1,16 +1,6 @@
-import { Dispatch } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import { NextAppContext } from 'next/app';
-import { Action } from './store/actions';
-import { State } from './store/model';
 import { NsLogger } from './utils/logger';
 import { WithTranslation } from 'next-i18next';
-
-export type ActionCreator<A> = (...args) => A;
-export type ThunkActionCreator<A> = (
-  ...args
-) => (dispatch: Dispatch<A>, getState: () => State) => void;
-export type ThunkDispatch = ThunkDispatch<State, null, Action>;
 
 /**
  * Data received by each page returned by `getInitialProps`

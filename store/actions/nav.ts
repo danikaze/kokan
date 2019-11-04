@@ -1,6 +1,6 @@
 import { Action } from 'redux';
+import { ActionCreator } from '../index';
 import { Page } from '../model';
-import { ActionCreator } from '../../interfaces';
 
 export type NavAction = ChangePageAction;
 
