@@ -4,6 +4,7 @@ import { NextAppContext } from 'next/app';
 import { Action } from './store/actions';
 import { State } from './store/model';
 import { NsLogger } from './utils/logger';
+import { WithTranslation } from 'next-i18next';
 
 export type ActionCreator<A> = (...args) => A;
 export type ThunkActionCreator<A> = (
@@ -21,7 +22,7 @@ export interface PageInitialProps {}
  */
 export interface PageComponent {
   /* The function to render the page itself */
-  (): JSX.Element;
+  (props: Partial<WithTranslation>): JSX.Element;
   /* Instance of the logger provided by _app */
   logger?: NsLogger;
   /* Function to be executed in server side or when transitioning to another page in client */
