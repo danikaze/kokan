@@ -25,6 +25,6 @@ export function getInitialState(pathname: string): State {
         travelListOpen: true,
       },
     },
-    travels: [],
+    trips: [],
   };
 }

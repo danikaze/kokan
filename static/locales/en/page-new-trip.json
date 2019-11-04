@@ -1,3 +1,7 @@
 {
-  "pageTitle": "Add new trip"
+  "pageTitle": "Add new trip",
+  "tripName": "Trip name",
+  "timeOffset": "Time offset",
+  "addButton": "Save new trip",
+  "addedFeedback": "New trip added!"
 }

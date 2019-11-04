@@ -21,9 +21,39 @@ export interface Ui {
   };
 }
 
+export interface Exchange {
+  id: number;
+  localCurrency: string;
+  localValue: number;
+  foreignCurrency: string;
+  foreignValue: number;
+}
+
+export interface Expense {
+  id: number;
+  comment?: string;
+  foreignPrice: number;
+  time: number;
+  position?: Pick<
+    Coordinates,
+    'latitude' | 'longitude' | 'altitude' | 'accuracy'
+  >;
+}
+
+export interface Trip {
+  id: number;
+  timeOffset: number;
+  name: string;
+  createdOn: number;
+  updatedOn: number;
+  exchanges: Exchange[];
+  expenses: Expense[];
+}
+
 export interface State {
   settings: Settings;
   userSettings: UserSettings;
   currentPage: Page;
   ui: Ui;
+  trips: Trip[];
 }
