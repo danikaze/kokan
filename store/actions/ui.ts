@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { ThunkActionCreator } from '../../interfaces';
+import { ThunkActionCreator } from '../../store';
 
 export type UiAction = ToggleMenuAction | ToggleTravelListAction;
 

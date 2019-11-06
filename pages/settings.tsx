@@ -17,9 +17,11 @@ import { LANGUAGES } from '../constants/app';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLanguage, setSetting } from '../store/actions/settings';
 import { getIsGpsAllowed, getLanguage } from '../store/selectors';
+import { initPage } from '../utils/init-page';
 
 const useSettings = () => {
   const dispatch = useDispatch();
+  initPage(dispatch);
 
   return {
     lang: useSelector(getLanguage),
