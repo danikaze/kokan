@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { ThunkActionCreator, ActionCreator } from '../index';
+import { ActionCreator, ThunkActionCreator } from '../index';
 import { Lang } from '../model';
 import { i18n } from '../../utils/i18n';
 

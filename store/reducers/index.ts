@@ -5,6 +5,7 @@ import { settingsReducer } from './settings';
 import { uiReducer } from './ui';
 import { navReducer } from './nav';
 import { tripsReducer } from './trips';
+import { storageReducer } from './storage';
 
 /**
  * List of partial reducers to aply (in order).
@@ -15,6 +16,7 @@ const reducerList: Reducer<State, Action>[] = [
   uiReducer,
   navReducer,
   tripsReducer,
+  storageReducer,
 ];
 
 /**
