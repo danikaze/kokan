@@ -98,7 +98,7 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
         <Collapse in={isTravelListOpen}>
           <List disablePadding>
             <LinkItem
-              href="/new-trip"
+              href="/trip/new"
               page="newTrip"
               currentPage={currentPage}
               primary={t('addNew')}
