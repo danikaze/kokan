@@ -49,8 +49,8 @@ const useSettings = () => {
           navigator.geolocation.getCurrentPosition(() => {
             dispatch(setSetting(name, value));
           });
+          return;
         }
-        return;
       }
 
       dispatch(setSetting(name, value));

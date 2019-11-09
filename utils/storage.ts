@@ -54,9 +54,6 @@ export async function storeUserSettings(settings: UserSettings): Promise<void> {
 /**
  * Store one trip, specified by the id
  * All are needed to store the order
- *
- * @param id
- * @param trips
  */
 export async function storeTrip(id: number, trips: Trip[]): Promise<void> {
   await initStorage();
@@ -66,7 +63,7 @@ export async function storeTrip(id: number, trips: Trip[]): Promise<void> {
     if (t.id === id) {
       trip = t;
     }
-    return trip.id;
+    return t.id;
   });
 
   await Promise.all([

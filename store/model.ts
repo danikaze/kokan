@@ -33,6 +33,7 @@ export interface Expense {
   id: number;
   comment?: string;
   foreignPrice: number;
+  localPrice: number;
   time: number;
   position?: Pick<
     Coordinates,
