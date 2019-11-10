@@ -14,6 +14,11 @@ const upgrades = {
 const userSettingsStoreName = 'userSettings';
 const tripsStoreName = 'trips';
 
+const defaultSettings: UserSettings = {
+  gps: false,
+  lang: 'en',
+};
+
 async function initStorage(): Promise<void> {
   if (!db) {
     db = await openDB(dbName, dbVersion, { upgrade: upgradeDb });
@@ -27,7 +32,10 @@ export async function loadStoredData(): Promise<
 
   const data = await Promise.all([loadSettings(), loadTrips()]).then(
     ([userSettings, trips]) => {
-      return { userSettings, trips };
+      return {
+        userSettings: userSettings || defaultSettings,
+        trips: trips || [],
+      };
     }
   );
 
