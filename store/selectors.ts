@@ -27,6 +27,10 @@ export const getExpenses = (tripId: number, state: State) => {
   const trip = getTrip(tripId, state);
   return trip && trip.expenses;
 };
+export const getExpense = (tripId: number, expenseId: number, state: State) => {
+  const trip = getTrip(tripId, state);
+  return trip && trip.expenses && trip.expenses.find(e => e.id === expenseId);
+};
 export const getNextExpenseId = (tripId: number, state: State) => {
   const expenses = getExpenses(tripId, state);
   if (!expenses) {

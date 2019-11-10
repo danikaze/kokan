@@ -1,7 +1,12 @@
 import { Action } from 'redux';
 import { ThunkActionCreator } from '../index';
-import { Trip, Expense } from '../model';
-import { getNextExpenseId, getNextTripId, getIsGpsAllowed } from '../selectors';
+import { Trip, Expense, State, PositionData } from '../model';
+import {
+  getNextExpenseId,
+  getNextTripId,
+  getIsGpsAllowed,
+  getExpense,
+} from '../selectors';
 
 export type TripAction = AddNewTrip | AddNewExpense;
 
@@ -15,6 +20,9 @@ interface AddNewExpense extends Action {
   tripId: number;
   expense: Expense;
 }
+
+// don't wait more than 1 sec for the location
+const LOCATION_TIMEOUT = 1000;
 
 export const addNewTrip: ThunkActionCreator<AddNewTrip> = (name: string) => {
   return (dispatch, getState) => {
@@ -45,29 +53,18 @@ export const addOrEditExpense: ThunkActionCreator<AddNewExpense> = (
 ) => {
   return async (dispatch, getState) => {
     const useGps = getIsGpsAllowed(getState());
-    let position: Pick<
-      Coordinates,
-      'latitude' | 'longitude' | 'altitude' | 'accuracy'
-    >;
+    const expenseId = expense.id || getNextExpenseId(tripId, getState());
+    let position: PositionData;
 
     if (useGps) {
-      position = await new Promise(resolve => {
-        navigator.geolocation.getCurrentPosition(({ coords }) => {
-          resolve({
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-            altitude: coords.altitude,
-            accuracy: coords.accuracy,
-          });
-        });
-      });
+      position = await getPosition(dispatch, getState, tripId, expenseId);
     }
 
     const completeExpense: Expense = {
       ...expense,
       position,
       time: Date.now(),
-      id: expense.id || getNextExpenseId(tripId, getState()),
+      id: expenseId,
     };
 
     dispatch({
@@ -77,3 +74,50 @@ export const addOrEditExpense: ThunkActionCreator<AddNewExpense> = (
     });
   };
 };
+
+function getPosition(
+  dispatch,
+  getState: () => State,
+  tripId: number,
+  expenseId: number
+): Promise<PositionData> {
+  return new Promise(resolve => {
+    let hasTimedOut = false;
+
+    function coordsToPosition(coords: Coordinates): PositionData {
+      return {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        altitude: coords.altitude,
+        accuracy: coords.accuracy,
+      };
+    }
+
+    // if timeouts, resolve to undefined
+    const timeoutHandler = setTimeout(() => {
+      resolve();
+      hasTimedOut = true;
+    }, LOCATION_TIMEOUT);
+
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      // if timed out, dispatch a modification for that action adding the location data
+      if (hasTimedOut) {
+        const expense = getExpense(tripId, expenseId, getState());
+        dispatch(
+          addOrEditExpense({
+            tripId,
+            expense: {
+              ...expense,
+              position: coordsToPosition(coords),
+            },
+          })
+        );
+        return;
+      }
+
+      // resolve with the location data
+      clearTimeout(timeoutHandler);
+      resolve(coordsToPosition(coords));
+    });
+  });
+}
