@@ -7,12 +7,14 @@ import { ThunkDispatch } from '../store';
 let dataLoaded = false;
 
 export async function initPage(dispatch: ThunkDispatch<Action>) {
-  if (!IS_SERVER) {
-    useEffect(() => {
-      if (!dataLoaded) {
-        dataLoaded = true;
-        dispatch(loadData());
-      }
-    }, []);
+  if (IS_SERVER) {
+    return;
   }
+
+  useEffect(() => {
+    if (!dataLoaded) {
+      dataLoaded = true;
+      dispatch(loadData());
+    }
+  }, []);
 }

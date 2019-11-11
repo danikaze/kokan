@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { Container, Typography, List, ListItem } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import { initPage } from '../../utils/init-page';
 import { PageComponent } from '../../interfaces';
 import { withRedux } from '../../store/with-redux';
@@ -9,8 +8,10 @@ import { AppMenu } from '../../components/app-menu';
 import { PageTitle } from '../../components/page-title';
 import { getTrip } from '../../store/selectors';
 import { useRouter } from 'next/router';
-import { Trip, Expense } from '../../store/model';
+import { Trip } from '../../store/model';
 import { PriceInput } from '../../components/price-input';
+import { withTranslation } from '../../utils/i18n';
+import { ExpenseList } from '../../components/expense-list';
 
 function useTrip(): Trip {
   const router = useRouter();
@@ -28,7 +29,7 @@ function useTrip(): Trip {
 const TripPage: PageComponent = function TripPage({ t }) {
   initPage(useDispatch());
   const trip = useTrip();
-  const contents = trip ? renderTrip({ t, trip }) : renderNotFound({ t });
+  const contents = trip ? renderTrip({ trip }) : renderNotFound({ t });
 
   return (
     <>
@@ -44,37 +45,13 @@ function renderNotFound({ t }): JSX.Element {
   return <PageTitle>{t('notFound')}</PageTitle>;
 }
 
-function renderTrip({ t, trip }): JSX.Element {
+function renderTrip({ trip }): JSX.Element {
   return (
     <>
       <PageTitle>{trip.name}</PageTitle>
-
       <PriceInput tripId={trip.id} />
-
-      {renderExpenses(t, trip.expenses)}
+      <ExpenseList expenses={trip.expenses} />
     </>
-  );
-}
-
-function renderExpenses(t, expenses: Expense[]): JSX.Element {
-  if (!expenses || !expenses.length) {
-    return <Typography variant="h6">{t('noExpenses')}</Typography>;
-  }
-
-  return (
-    <>
-      <Typography variant="h6">{t('expenses')}</Typography>
-      <List>{expenses.map(renderExpense)}</List>
-    </>
-  );
-}
-
-function renderExpense(expense: Expense): JSX.Element {
-  return (
-    <ListItem key={expense.id}>
-      {expense.foreignPrice} USD ({expense.localPrice} JPY){' '}
-      <span>{expense.comment}</span>
-    </ListItem>
   );
 }
 
