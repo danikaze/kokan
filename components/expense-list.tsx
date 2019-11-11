@@ -2,11 +2,21 @@ import { WithTranslation } from 'react-i18next';
 import { Typography, List } from '@material-ui/core';
 import { withTranslation } from '../utils/i18n';
 import { ExpenseListItem } from './expense-list-item';
-import { Expense } from '../store/model';
+import { Expense, CurrencySettings } from '../store/model';
 
 interface Props extends WithTranslation {
   expenses: Expense[];
 }
+
+// TODO: Get this from the db/State
+const foreignCurrency: CurrencySettings = {
+  text: 'USD',
+  decimals: 2,
+};
+const localCurrency: CurrencySettings = {
+  text: 'JPY',
+  decimals: 0,
+};
 
 function BaseExpenseList({ t, expenses }: Props): JSX.Element {
   if (!expenses || !expenses.length) {
@@ -17,8 +27,8 @@ function BaseExpenseList({ t, expenses }: Props): JSX.Element {
     <ExpenseListItem
       key={expense.id}
       expense={expense}
-      foreignCurrency="USD"
-      localCurrency="JPY"
+      foreignCurrency={foreignCurrency}
+      localCurrency={localCurrency}
     />
   ));
 

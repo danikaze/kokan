@@ -25,6 +25,12 @@ export interface Ui {
   };
 }
 
+export interface CurrencySettings {
+  text: string;
+  decimals: number;
+  prepend?: boolean;
+}
+
 export interface Exchange {
   id: number;
   localCurrency: string;
