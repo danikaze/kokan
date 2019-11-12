@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, ButtonGroup } from '@material-ui/core';
 import { withTranslation } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
@@ -71,13 +71,11 @@ function usePriceInputForm(tripId: number) {
   };
 }
 
-type TranslatedComponent<T extends {}> = (
-  props: T & Partial<WithTranslation>
-) => JSX.Element;
-const BasePriceInput: TranslatedComponent<{ tripId: number }> = ({
-  t,
-  tripId,
-}) => {
+interface Props extends WithTranslation {
+  tripId: number;
+}
+
+const BasePriceInput = ({ t, tripId }: Props) => {
   const {
     gpsAllowed,
     addExpense,
@@ -110,10 +108,15 @@ const BasePriceInput: TranslatedComponent<{ tripId: number }> = ({
         inputRef={commentRef}
       />
 
-      <Button onClick={addExpense} variant="contained">
-        {t('addExpenseButton')}
-      </Button>
-      {gpsAllowed ? <LocationOnIcon /> : <LocationOffIcon />}
+      <Buttons
+        fullWidth
+        variant="contained"
+        size="large"
+        aria-label="split button"
+      >
+        <Button onClick={addExpense}>{t('addExpenseButton')}</Button>
+        <Button>{gpsAllowed ? <LocationOnIcon /> : <LocationOffIcon />}</Button>
+      </Buttons>
     </>
   );
 };
@@ -125,6 +128,14 @@ const CSSTextField = withStyles({
     },
   },
 })(TextField);
+
+const Buttons = withStyles(theme => ({
+  root: {
+    display: 'flex',
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+}))(ButtonGroup);
 
 function PriceInputField(props: {
   autoFocus?: boolean;

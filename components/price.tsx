@@ -6,16 +6,16 @@ interface QuantityProps {
   currency: CurrencySettings;
 }
 
-type Props = QuantityProps & TypographyProps;
+type PriceProps = QuantityProps & TypographyProps;
 
-export function Price(props: Props): JSX.Element {
+export const Price: React.ComponentType<PriceProps> = (props: PriceProps) => {
   const { quantity, currency, ...typoProps } = props;
   return (
     <Typography {...typoProps}>
       {formatNumber({ quantity, currency })}
     </Typography>
   );
-}
+};
 
 function formatNumber({ quantity, currency }: QuantityProps): string {
   if (!quantity) return '';
