@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addOrEditExpense } from '../store/actions/trips';
 import { Expense } from '../store/model';
 import { WithTranslation } from 'next-i18next';
+import { setSetting } from '../store/actions/settings';
 
 type InputRef = React.RefObject<HTMLInputElement>;
 type TextAreaRef = React.RefObject<HTMLTextAreaElement>;
@@ -19,7 +20,7 @@ function usePriceInputForm(tripId: number) {
   const foreignRef = React.createRef() as InputRef;
   const localRef = React.createRef() as InputRef;
   const commentRef = React.createRef() as TextAreaRef;
-  const gpsAllowed = useSelector(getIsGpsAllowed);
+  let gpsAllowed = useSelector(getIsGpsAllowed);
 
   function addExpense() {
     const expense: Pick<Expense, 'foreignPrice' | 'localPrice' | 'comment'> = {
@@ -36,6 +37,17 @@ function usePriceInputForm(tripId: number) {
     localRef.current.value = '';
     commentRef.current.value = '';
     dispatch(addOrEditExpense(tripId, expense));
+  }
+
+  function toggleGps() {
+    gpsAllowed = 'geolocation' in navigator ? !gpsAllowed : false;
+    if (gpsAllowed) {
+      navigator.geolocation.getCurrentPosition(() => {
+        dispatch(setSetting('gps', gpsAllowed));
+      });
+      return;
+    }
+    dispatch(setSetting('gps', gpsAllowed));
   }
 
   function handleChange(ev: React.ChangeEvent<HTMLInputElement>) {
@@ -63,6 +75,7 @@ function usePriceInputForm(tripId: number) {
   return {
     gpsAllowed,
     addExpense,
+    toggleGps,
     foreignRef,
     localRef,
     commentRef,
@@ -79,6 +92,7 @@ const BasePriceInput = ({ t, tripId }: Props) => {
   const {
     gpsAllowed,
     addExpense,
+    toggleGps,
     localRef,
     foreignRef,
     commentRef,
@@ -115,7 +129,9 @@ const BasePriceInput = ({ t, tripId }: Props) => {
         aria-label="split button"
       >
         <Button onClick={addExpense}>{t('addExpenseButton')}</Button>
-        <Button>{gpsAllowed ? <LocationOnIcon /> : <LocationOffIcon />}</Button>
+        <Button onClick={toggleGps}>
+          {gpsAllowed ? <LocationOnIcon /> : <LocationOffIcon />}
+        </Button>
       </Buttons>
     </>
   );
