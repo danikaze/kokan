@@ -19,6 +19,8 @@ export interface UserSettings {
 }
 
 export interface Ui {
+  currentPage: Page;
+  selectedTripId?: number;
   menu: {
     isOpen: boolean;
     travelListOpen: boolean;
@@ -63,7 +65,6 @@ export interface Trip {
 export interface State {
   settings: Settings;
   userSettings: UserSettings;
-  currentPage: Page;
   ui: Ui;
   trips: Trip[];
 }

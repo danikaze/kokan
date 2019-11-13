@@ -45,7 +45,9 @@ const useStyles = makeStyles(theme => ({
 
 interface LinkItemProps {
   page: Page;
+  tripId?: number;
   currentPage: Page;
+  selectedTripId?: number;
   href: string;
   as?: string;
   primary: string;
@@ -80,9 +82,17 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
         <LinkItem
           href="/"
           page="home"
-          currentPage={currentPage}
+          currentPage={currentPage.page}
           primary={t('home')}
           icon={<HomeIcon />}
+        />
+
+        <LinkItem
+          href="/trip/new"
+          page="newTrip"
+          currentPage={currentPage.page}
+          primary={t('addNew')}
+          icon={<AddIcon />}
         />
 
         <ListItem button onClick={handleTravelListToggle}>
@@ -95,15 +105,7 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
 
         <Collapse in={isTravelListOpen}>
           <List disablePadding>
-            <LinkItem
-              href="/trip/new"
-              page="newTrip"
-              currentPage={currentPage}
-              primary={t('addNew')}
-              icon={<AddIcon />}
-            />
-
-            {getTripList(trips, currentPage)}
+            {getTripList(trips, currentPage.page, currentPage.tripId)}
           </List>
         </Collapse>
       </List>
@@ -114,7 +116,7 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
         <LinkItem
           href="/settings"
           page="settings"
-          currentPage={currentPage}
+          currentPage={currentPage.page}
           primary={t('settings')}
           icon={<SettingsIcon />}
         />
@@ -128,17 +130,21 @@ function LinkItem({
   as,
   page,
   currentPage,
+  selectedTripId,
+  tripId,
   primary,
   icon,
   inset,
 }: LinkItemProps): JSX.Element {
   const classes = useStyles(undefined);
   const iconElem = icon && <ListItemIcon>{icon}</ListItemIcon>;
+  const isSelected =
+    currentPage === page && (!tripId || tripId === selectedTripId);
 
   return (
-    <Link href={href} as={as} page={page}>
+    <Link href={href} as={as} page={page} tripId={tripId}>
       <a className={classes.listLink}>
-        <ListItem button selected={currentPage === page}>
+        <ListItem button selected={isSelected}>
           {iconElem}
           <ListItemText inset={inset} primary={primary} />
         </ListItem>
@@ -147,7 +153,11 @@ function LinkItem({
   );
 }
 
-function getTripList(trips: Trip[], currentPage: Page): JSX.Element[] {
+function getTripList(
+  trips: Trip[],
+  currentPage: Page,
+  selectedTripId: number
+): JSX.Element[] {
   return trips.map(trip => (
     <LinkItem
       key={trip.id}
@@ -155,6 +165,8 @@ function getTripList(trips: Trip[], currentPage: Page): JSX.Element[] {
       as={`/trip/${trip.id}`}
       page="trip"
       currentPage={currentPage}
+      selectedTripId={selectedTripId}
+      tripId={trip.id}
       primary={trip.name}
       inset
     />

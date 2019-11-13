@@ -8,9 +8,10 @@ export function navReducer(prevState: State, action: NavAction): State {
 
   return {
     ...prevState,
-    currentPage: action.page,
     ui: {
       ...prevState.ui,
+      currentPage: action.page,
+      selectedTripId: action.tripId,
       menu: {
         ...prevState.ui.menu,
         isOpen: false,

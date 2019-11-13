@@ -6,7 +6,10 @@ import { State, Trip } from './model';
 export const getIsMenuOpen = (state: State) => state.ui.menu.isOpen;
 export const getIsTravelListOpen = (state: State) =>
   state.ui.menu.travelListOpen;
-export const getCurrentPage = (state: State) => state.currentPage;
+export const getCurrentPage = (state: State) => ({
+  page: state.ui.currentPage,
+  tripId: state.ui.selectedTripId,
+});
 
 /*
  * Settings
