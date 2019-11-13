@@ -24,6 +24,7 @@ interface Props extends WithTranslation {
   localCurrency: CurrencySettings;
 }
 
+// tslint:disable: no-magic-numbers
 const useStyles = makeStyles(theme => ({
   foreignPrice: {
     fontWeight: 'bold',
@@ -53,6 +54,7 @@ const useStyles = makeStyles(theme => ({
     right: 0,
   },
 }));
+// tslint:enable
 
 function BaseExpenseListItem({
   tripId,
