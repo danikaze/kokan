@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { ThunkActionCreator } from '../index';
+import { ThunkActionCreator, ActionCreator } from '../index';
 import { Trip, Expense, State, PositionData } from '../model';
 import {
   getNextExpenseId,
@@ -8,23 +8,34 @@ import {
   getExpense,
 } from '../selectors';
 
-export type TripAction = AddNewTrip | AddNewExpense;
+export type TripAction =
+  | AddNewTripAction
+  | AddNewExpenseAction
+  | RemoveExpenseAction;
 
-interface AddNewTrip extends Action {
+export interface AddNewTripAction extends Action {
   type: 'NEW_TRIP';
   trip: Trip;
 }
 
-interface AddNewExpense extends Action {
+export interface AddNewExpenseAction extends Action {
   type: 'EXPENSE';
   tripId: number;
   expense: Expense;
 }
 
+export interface RemoveExpenseAction extends Action {
+  type: 'REMOVE_EXPENSE';
+  tripId: number;
+  expenseId: number;
+}
+
 // don't wait more than 1 sec for the location
 const LOCATION_TIMEOUT = 1000;
 
-export const addNewTrip: ThunkActionCreator<AddNewTrip> = (name: string) => {
+export const addNewTrip: ThunkActionCreator<AddNewTripAction> = (
+  name: string
+) => {
   return (dispatch, getState) => {
     const nextId = getNextTripId(getState());
     const now = Date.now();
@@ -45,7 +56,7 @@ export const addNewTrip: ThunkActionCreator<AddNewTrip> = (name: string) => {
   };
 };
 
-export const addOrEditExpense: ThunkActionCreator<AddNewExpense> = (
+export const addOrEditExpense: ThunkActionCreator<AddNewExpenseAction> = (
   tripId: number,
   expense: Pick<Expense, 'foreignPrice' | 'localPrice' | 'comment'> & {
     id?: number;
@@ -74,6 +85,15 @@ export const addOrEditExpense: ThunkActionCreator<AddNewExpense> = (
     });
   };
 };
+
+export const removeExpense: ActionCreator<RemoveExpenseAction> = (
+  tripId: number,
+  expenseId: number
+) => ({
+  tripId,
+  expenseId,
+  type: 'REMOVE_EXPENSE',
+});
 
 function getPosition(
   dispatch,

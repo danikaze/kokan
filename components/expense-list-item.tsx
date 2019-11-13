@@ -7,14 +7,18 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { WithTranslation } from 'react-i18next';
-import { Expense, PositionData, CurrencySettings } from '../store/model';
+import { Expense, CurrencySettings } from '../store/model';
 import { withTranslation } from '../utils/i18n';
 import { Price } from './price';
 import LocationIcon from '@material-ui/icons/LocationOn';
 import { blueGrey } from '@material-ui/core/colors';
+import { useDispatch } from 'react-redux';
+import { removeExpense } from '../store/actions/trips';
 
 interface Props extends WithTranslation {
+  tripId: number;
   expense: Expense;
   foreignCurrency: CurrencySettings;
   localCurrency: CurrencySettings;
@@ -36,13 +40,22 @@ const useStyles = makeStyles(theme => ({
   date: {
     color: blueGrey['300'],
   },
-  location: {
+  actions: {
     position: 'absolute',
     right: theme.spacing(3),
+  },
+  position: {
+    position: 'absolute',
+    right: 24,
+  },
+  delete: {
+    position: 'absolute',
+    right: 0,
   },
 }));
 
 function BaseExpenseListItem({
+  tripId,
   expense,
   foreignCurrency,
   localCurrency,
@@ -66,22 +79,43 @@ function BaseExpenseListItem({
           currency={localCurrency}
         />
         {getExpenseDate(expense.time)}
-        {getPositionIcon(expense.position)}
+        {getActionIcons(tripId, expense)}
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );
 }
 
-function getPositionIcon(position: PositionData): JSX.Element {
-  if (!position) return;
-
+function getActionIcons(tripId: number, expense: Expense): JSX.Element {
+  const dispatch = useDispatch();
   const classes = useStyles(undefined);
-  const url = `https://www.google.com/maps?q=${position.latitude},${position.longitude}`;
+
+  const positionIcon = (() => {
+    if (!expense.position) return;
+    const { latitude, longitude } = expense.position;
+    const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+    return (
+      <Link className={classes.position} href={url} target="_blank">
+        <LocationIcon fontSize="small" />
+      </Link>
+    );
+  })();
+
+  function handleClick() {
+    dispatch(removeExpense(tripId, expense.id));
+  }
+
+  const deleteIcon = (
+    <Link className={classes.delete} color="secondary" onClick={handleClick}>
+      <DeleteIcon fontSize="small" />
+    </Link>
+  );
 
   return (
-    <Link className={classes.location} href={url} target="_blank">
-      <LocationIcon fontSize="small" />
-    </Link>
+    <div className={classes.actions}>
+      {positionIcon}
+      {deleteIcon}
+    </div>
   );
 }
 

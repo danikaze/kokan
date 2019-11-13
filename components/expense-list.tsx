@@ -5,6 +5,7 @@ import { ExpenseListItem } from './expense-list-item';
 import { Expense, CurrencySettings } from '../store/model';
 
 interface Props extends WithTranslation {
+  tripId: number;
   expenses: Expense[];
 }
 
@@ -18,7 +19,7 @@ const localCurrency: CurrencySettings = {
   decimals: 0,
 };
 
-function BaseExpenseList({ t, expenses }: Props): JSX.Element {
+function BaseExpenseList({ t, tripId, expenses }: Props): JSX.Element {
   if (!expenses || !expenses.length) {
     return <Typography variant="h6">{t('noExpenses')}</Typography>;
   }
@@ -26,6 +27,7 @@ function BaseExpenseList({ t, expenses }: Props): JSX.Element {
   const expenseList = expenses.map(expense => (
     <ExpenseListItem
       key={expense.id}
+      tripId={tripId}
       expense={expense}
       foreignCurrency={foreignCurrency}
       localCurrency={localCurrency}

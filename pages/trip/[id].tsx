@@ -50,7 +50,7 @@ function renderTrip({ trip }): JSX.Element {
     <>
       <PageTitle>{trip.name}</PageTitle>
       <PriceInput tripId={trip.id} />
-      <ExpenseList expenses={trip.expenses} />
+      <ExpenseList tripId={trip.id} expenses={trip.expenses} />
     </>
   );
 }

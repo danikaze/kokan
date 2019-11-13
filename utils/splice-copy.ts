@@ -4,10 +4,11 @@
  * Doesn't handle negative indexes (will just insert at the beginning)
  */
 export function spliceCopy<T>(array: T[], index: number, ...elems: T[]): T[] {
-  if (elems.length > 0) {
+  const nonUndefinedElems = elems.filter(e => e !== undefined);
+  if (nonUndefinedElems.length > 0) {
     return array
       .slice(0, Math.max(0, index))
-      .concat(...elems, array.slice(index + 1));
+      .concat(...nonUndefinedElems, array.slice(index + 1));
   }
-  return array.slice(0, Math.max(0, index - 1)).concat(array.slice(index + 1));
+  return array.slice(0, Math.max(0, index)).concat(array.slice(index + 1));
 }
