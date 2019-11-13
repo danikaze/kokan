@@ -47,8 +47,10 @@ interface LinkItemProps {
   page: Page;
   currentPage: Page;
   href: string;
+  as?: string;
   primary: string;
-  icon: JSX.Element;
+  icon?: JSX.Element;
+  inset?: boolean;
 }
 
 function BaseAppMenu({ t }: WithTranslation): JSX.Element {
@@ -83,11 +85,7 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
           icon={<HomeIcon />}
         />
 
-        <ListItem
-          button
-          onClick={handleTravelListToggle}
-          selected={currentPage === 'trip'}
-        >
+        <ListItem button onClick={handleTravelListToggle}>
           <ListItemIcon>
             <CardTravelIcon />
           </ListItemIcon>
@@ -98,14 +96,14 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
         <Collapse in={isTravelListOpen}>
           <List disablePadding>
             <LinkItem
-              href="/new-trip"
+              href="/trip/new"
               page="newTrip"
               currentPage={currentPage}
               primary={t('addNew')}
               icon={<AddIcon />}
             />
 
-            {getTripList(trips)}
+            {getTripList(trips, currentPage)}
           </List>
         </Collapse>
       </List>
@@ -127,30 +125,39 @@ function BaseAppMenu({ t }: WithTranslation): JSX.Element {
 
 function LinkItem({
   href,
+  as,
   page,
   currentPage,
   primary,
   icon,
+  inset,
 }: LinkItemProps): JSX.Element {
   const classes = useStyles(undefined);
+  const iconElem = icon && <ListItemIcon>{icon}</ListItemIcon>;
 
   return (
-    <Link href={href} page={page}>
+    <Link href={href} as={as} page={page}>
       <a className={classes.listLink}>
         <ListItem button selected={currentPage === page}>
-          <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText primary={primary} />
+          {iconElem}
+          <ListItemText inset={inset} primary={primary} />
         </ListItem>
       </a>
     </Link>
   );
 }
 
-function getTripList(trips: Trip[]): JSX.Element[] {
+function getTripList(trips: Trip[], currentPage: Page): JSX.Element[] {
   return trips.map(trip => (
-    <ListItem key={trip.id} button>
-      <ListItemText inset primary={trip.name} />
-    </ListItem>
+    <LinkItem
+      key={trip.id}
+      href={`/trip/[id]`}
+      as={`/trip/${trip.id}`}
+      page="trip"
+      currentPage={currentPage}
+      primary={trip.name}
+      inset
+    />
   ));
 }
 

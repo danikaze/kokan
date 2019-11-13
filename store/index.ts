@@ -5,16 +5,21 @@ import {
   applyMiddleware,
   Reducer,
   Action,
-  Dispatch,
 } from 'redux';
-import thunkMiddleware, { ThunkDispatch } from 'redux-thunk';
+import thunkMiddleware, {
+  ThunkDispatch as ReduxThunkDispatch,
+} from 'redux-thunk';
 import { State } from './model';
 
+export type ThunkDispatch<A extends Action> = ReduxThunkDispatch<
+  State,
+  null,
+  A
+>;
 export type ActionCreator<A extends Action> = (...args) => A;
 export type ThunkActionCreator<A extends Action> = (
   ...args
-) => (dispatch: Dispatch<A>, getState: () => State) => void;
-export type ThunkDispatch = ThunkDispatch<State, null, Action>;
+) => (dispatch: ThunkDispatch<A>, getState: () => State) => void;
 
 /**
  * If we're in dev mode, use the Redux Devtools Extension if available (only in client side)

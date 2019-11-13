@@ -1,13 +1,15 @@
-import { PageComponent } from '../interfaces';
-import { Container, TextField, Button, Snackbar } from '@material-ui/core';
-import { withTranslation } from '../utils/i18n';
-import { withRedux } from '../store/with-redux';
-import { AppTitle } from '../components/app-title';
-import { AppMenu } from '../components/app-menu';
-import { PageTitle } from '../components/page-title';
-import { useDispatch } from 'react-redux';
-import { addNewTrip } from '../store/actions/trips';
 import { createRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Container, TextField, Button, Snackbar } from '@material-ui/core';
+import { PageComponent } from '../../interfaces';
+import { withTranslation } from '../../utils/i18n';
+import { withRedux } from '../../store/with-redux';
+import { AppTitle } from '../../components/app-title';
+import { AppMenu } from '../../components/app-menu';
+import { PageTitle } from '../../components/page-title';
+import { addNewTrip } from '../../store/actions/trips';
+import { snackBarDuration as SNACKBAR_DURATION } from '../../constants/app';
+import { initPage } from '../../utils/init-page';
 
 function useNewTripForm() {
   let valid = true;
@@ -52,6 +54,8 @@ function useNewTripForm() {
  * Add New Trip Page
  */
 const NewTripPage: PageComponent = function NewTripPage({ t }) {
+  initPage(useDispatch());
+
   const {
     nameRef,
     nameError,
@@ -88,7 +92,7 @@ const NewTripPage: PageComponent = function NewTripPage({ t }) {
         <Snackbar
           open={showSnackBar}
           onClose={hideSnackbar}
-          autoHideDuration={3000}
+          autoHideDuration={SNACKBAR_DURATION}
           ContentProps={{ 'aria-describedby': 'message-id' }}
           message={<span id="message-id">{t('addedFeedback')}</span>}
         />

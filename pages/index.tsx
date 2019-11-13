@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Card,
   CardContent,
@@ -11,6 +12,7 @@ import { withRedux } from '../store/with-redux';
 import { PageComponent } from '../interfaces';
 import { AppTitle } from '../components/app-title';
 import { AppMenu } from '../components/app-menu';
+import { initPage } from '../utils/init-page';
 
 const CustomCard = styled(Card)({
   minWidth: 275,
@@ -20,6 +22,8 @@ const CustomCard = styled(Card)({
  * Index page
  */
 const IndexPage: PageComponent = () => {
+  initPage(useDispatch());
+
   return (
     <>
       <AppTitle />

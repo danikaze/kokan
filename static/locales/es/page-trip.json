@@ -1,0 +1,9 @@
+{
+  "notFound": "Viaje no encontrado",
+  "foreignValueInput": "Precio extranjero",
+  "localValueInput": "Precio local",
+  "expenses": "Gastos",
+  "noExpenses": "No hay gastos para este viaje aún",
+  "addExpenseButton": "Añadir gasto",
+  "commentPlaceholder": "Comentario"
+}

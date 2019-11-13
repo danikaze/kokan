@@ -8,6 +8,10 @@ export type Page =
   | 'settings'
   | 'error';
 export type Lang = 'en' | 'es';
+export type PositionData = Pick<
+  Coordinates,
+  'latitude' | 'longitude' | 'altitude' | 'accuracy'
+>;
 
 export interface UserSettings {
   lang: Lang;
@@ -19,6 +23,12 @@ export interface Ui {
     isOpen: boolean;
     travelListOpen: boolean;
   };
+}
+
+export interface CurrencySettings {
+  text: string;
+  decimals: number;
+  prepend?: boolean;
 }
 
 export interface Exchange {
@@ -33,11 +43,9 @@ export interface Expense {
   id: number;
   comment?: string;
   foreignPrice: number;
+  localPrice: number;
   time: number;
-  position?: Pick<
-    Coordinates,
-    'latitude' | 'longitude' | 'altitude' | 'accuracy'
-  >;
+  position?: PositionData;
 }
 
 export interface Trip {
