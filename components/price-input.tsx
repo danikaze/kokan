@@ -16,22 +16,24 @@ type TextAreaRef = React.RefObject<HTMLTextAreaElement>;
 
 function usePriceInputForm(tripId: number) {
   const dispatch = useDispatch();
-  const [needShrink, setNeedShrink] = useState<boolean>();
+  const [needShrink, setNeedShrink] = useState<boolean>(false);
+  const [inputError, setInputError] = useState<boolean>(false);
   const foreignRef = React.createRef() as InputRef;
   const localRef = React.createRef() as InputRef;
   const commentRef = React.createRef() as TextAreaRef;
   let gpsAllowed = useSelector(getIsGpsAllowed);
 
   function addExpense() {
+    if (foreignRef.current.value === '' || localRef.current.value === '') {
+      setInputError(true);
+      return;
+    }
+
     const expense: Pick<Expense, 'foreignPrice' | 'localPrice' | 'comment'> = {
       foreignPrice: Number(foreignRef.current.value),
       localPrice: Number(localRef.current.value),
       comment: commentRef.current.value || undefined,
     };
-
-    if (isNaN(expense.foreignPrice) || isNaN(expense.localPrice)) {
-      return;
-    }
 
     foreignRef.current.value = '';
     localRef.current.value = '';
@@ -65,10 +67,11 @@ function usePriceInputForm(tripId: number) {
     }
 
     setNeedShrink(value !== '');
+    setInputError(false);
   }
 
   // TODO: Get this values from the State
-  const rate = 112;
+  const rate = 111;
   const foreignDecimals = 2;
   const localDecimals = 0;
 
@@ -81,6 +84,7 @@ function usePriceInputForm(tripId: number) {
     commentRef,
     handleChange,
     needShrink,
+    inputError,
   };
 }
 
@@ -98,6 +102,7 @@ const BasePriceInput = ({ t, tripId }: Props) => {
     commentRef,
     handleChange,
     needShrink,
+    inputError,
   } = usePriceInputForm(tripId);
 
   return (
@@ -108,12 +113,14 @@ const BasePriceInput = ({ t, tripId }: Props) => {
         onChange={handleChange}
         inputRef={foreignRef}
         shrink={needShrink}
+        error={inputError}
       />
       <PriceInputField
         label={t('localValueInput')}
         onChange={handleChange}
         inputRef={localRef}
         shrink={needShrink}
+        error={inputError}
       />
       <TextField
         multiline
@@ -158,9 +165,10 @@ function PriceInputField(props: {
   label: string;
   inputRef: InputRef;
   shrink?: boolean;
+  error?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
-  const { shrink, ...textFieldProps } = props;
+  const { shrink, error, ...textFieldProps } = props;
   return (
     <CSSTextField
       {...textFieldProps}
@@ -169,7 +177,7 @@ function PriceInputField(props: {
       variant="outlined"
       margin="normal"
       placeholder="123"
-      InputLabelProps={{ shrink }}
+      InputLabelProps={{ shrink, error }}
     />
   );
 }
