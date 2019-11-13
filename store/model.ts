@@ -54,6 +54,8 @@ export interface Trip {
   name: string;
   createdOn: number;
   updatedOn: number;
+  foreignCurrency: CurrencySettings;
+  localCurrency: CurrencySettings;
   exchanges: Exchange[];
   expenses: Expense[];
 }

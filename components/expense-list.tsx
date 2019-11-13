@@ -2,35 +2,24 @@ import { WithTranslation } from 'react-i18next';
 import { Typography, List } from '@material-ui/core';
 import { withTranslation } from '../utils/i18n';
 import { ExpenseListItem } from './expense-list-item';
-import { Expense, CurrencySettings } from '../store/model';
+import { Trip } from '../store/model';
 
 interface Props extends WithTranslation {
-  tripId: number;
-  expenses: Expense[];
+  trip: Trip;
 }
 
-// TODO: Get this from the db/State
-const foreignCurrency: CurrencySettings = {
-  text: 'USD',
-  decimals: 2,
-};
-const localCurrency: CurrencySettings = {
-  text: 'JPY',
-  decimals: 0,
-};
-
-function BaseExpenseList({ t, tripId, expenses }: Props): JSX.Element {
-  if (!expenses || !expenses.length) {
+function BaseExpenseList({ t, trip }: Props): JSX.Element {
+  if (!trip.expenses || !trip.expenses.length) {
     return <Typography variant="h6">{t('noExpenses')}</Typography>;
   }
 
-  const expenseList = expenses.map(expense => (
+  const expenseList = trip.expenses.map(expense => (
     <ExpenseListItem
       key={expense.id}
-      tripId={tripId}
+      tripId={trip.id}
       expense={expense}
-      foreignCurrency={foreignCurrency}
-      localCurrency={localCurrency}
+      foreignCurrency={trip.foreignCurrency}
+      localCurrency={trip.localCurrency}
     />
   ));
 

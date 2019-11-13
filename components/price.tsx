@@ -11,7 +11,7 @@ type PriceProps = QuantityProps & TypographyProps;
 export const Price: React.ComponentType<PriceProps> = (props: PriceProps) => {
   const { quantity, currency, ...typoProps } = props;
   return (
-    <Typography {...typoProps}>
+    <Typography {...typoProps} component="span">
       {formatNumber({ quantity, currency })}
     </Typography>
   );
