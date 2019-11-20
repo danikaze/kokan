@@ -28,8 +28,8 @@ export interface Ui {
 }
 
 export interface CurrencySettings {
-  text: string;
-  decimals: number;
+  text?: string;
+  decimals?: number;
   prepend?: boolean;
 }
 

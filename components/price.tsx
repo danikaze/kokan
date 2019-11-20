@@ -3,7 +3,7 @@ import { CurrencySettings } from '../store/model';
 
 interface QuantityProps {
   quantity: number;
-  currency: CurrencySettings;
+  currency?: CurrencySettings;
 }
 
 type PriceProps = QuantityProps & TypographyProps;
@@ -18,15 +18,15 @@ export const Price: React.ComponentType<PriceProps> = (props: PriceProps) => {
 };
 
 function formatNumber({ quantity, currency }: QuantityProps): string {
-  if (!quantity) return '';
+  if (quantity === undefined) return '';
 
   let str =
-    typeof currency.decimals !== 'undefined'
+    currency && typeof currency.decimals !== 'undefined'
       ? quantity.toFixed(currency.decimals)
       : String(quantity);
   str = str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-  if (!currency) {
+  if (!currency || !currency.text) {
     return str;
   }
 
