@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
-import { TextField, Button, ButtonGroup } from '@material-ui/core';
+import {
+  TextField,
+  Button,
+  ButtonGroup,
+  InputAdornment,
+  Typography,
+} from '@material-ui/core';
 import { withTranslation } from 'react-i18next';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LocationOffIcon from '@material-ui/icons/LocationOff';
-import { getIsGpsAllowed } from '../store/selectors';
+import { getIsGpsAllowed, getTrip } from '../store/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { addOrEditExpense } from '../store/actions/trips';
-import { Expense } from '../store/model';
+import { Expense, Trip } from '../store/model';
 import { WithTranslation } from 'next-i18next';
 import { setSetting } from '../store/actions/settings';
+import { blueGrey } from '@material-ui/core/colors';
 
 type InputRef = React.RefObject<HTMLInputElement>;
 type TextAreaRef = React.RefObject<HTMLTextAreaElement>;
 
+const useStyles = makeStyles({
+  currencyAdornment: {
+    color: blueGrey['300'],
+    fontSize: '200%',
+  },
+});
+
 function usePriceInputForm(tripId: number) {
   const dispatch = useDispatch();
+  const trip = useSelector(getTrip.bind(null, tripId)) as Trip;
+  const localCurrency = trip.localCurrency;
+  const foreignCurrency = trip.foreignCurrency;
   const [needShrink, setNeedShrink] = useState<boolean>(false);
   const [inputError, setInputError] = useState<boolean>(false);
   const foreignRef = React.createRef() as InputRef;
@@ -85,6 +102,8 @@ function usePriceInputForm(tripId: number) {
     handleChange,
     needShrink,
     inputError,
+    localCurrency,
+    foreignCurrency,
   };
 }
 
@@ -103,6 +122,8 @@ const BasePriceInput = ({ t, tripId }: Props) => {
     handleChange,
     needShrink,
     inputError,
+    localCurrency,
+    foreignCurrency,
   } = usePriceInputForm(tripId);
 
   return (
@@ -114,6 +135,7 @@ const BasePriceInput = ({ t, tripId }: Props) => {
         inputRef={foreignRef}
         shrink={needShrink}
         error={inputError}
+        currencyAdornment={foreignCurrency.text}
       />
       <PriceInputField
         label={t('localValueInput')}
@@ -121,6 +143,7 @@ const BasePriceInput = ({ t, tripId }: Props) => {
         inputRef={localRef}
         shrink={needShrink}
         error={inputError}
+        currencyAdornment={localCurrency.text}
       />
       <TextField
         multiline
@@ -166,9 +189,10 @@ function PriceInputField(props: {
   inputRef: InputRef;
   shrink?: boolean;
   error?: boolean;
+  currencyAdornment: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
-  const { shrink, error, ...textFieldProps } = props;
+  const { shrink, error, currencyAdornment, ...textFieldProps } = props;
   return (
     <CSSTextField
       {...textFieldProps}
@@ -178,7 +202,20 @@ function PriceInputField(props: {
       margin="normal"
       placeholder="123"
       InputLabelProps={{ shrink, error }}
+      InputProps={{ endAdornment: getCurrencyAdornment(currencyAdornment) }}
     />
+  );
+}
+
+function getCurrencyAdornment(text: string) {
+  if (!text) return;
+
+  const classes = useStyles(undefined);
+
+  return (
+    <InputAdornment position="end">
+      <Typography className={classes.currencyAdornment}>{text}</Typography>
+    </InputAdornment>
   );
 }
 
