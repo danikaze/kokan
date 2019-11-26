@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { ThunkActionCreator, ActionCreator } from '../index';
+import { ThunkActionCreator, ActionCreator, ThunkDispatch } from '../index';
 import { Trip, Expense, State, PositionData } from '../model';
 import {
   getNextExpenseId,
@@ -75,7 +75,7 @@ export const addOrEditExpense: ThunkActionCreator<AddNewExpenseAction> = (
       type: 'EXPENSE',
     });
 
-    if (useGps) {
+    if (useGps && !completeExpense.position) {
       // position data is added always afterwards, so it's not blocking
       addPositionData(dispatch, getState, tripId, expenseId);
     }
@@ -94,35 +94,38 @@ export const removeExpense: ActionCreator<RemoveExpenseAction> = (
 /**
  * Add position data to an existing expense
  */
-function addPositionData(
-  dispatch,
+async function addPositionData(
+  dispatch: ThunkDispatch<AddNewExpenseAction>,
   getState: () => State,
   tripId: number,
   expenseId: number
 ): Promise<void> {
+  const expense = getExpense(tripId, expenseId, getState());
+  if (!expense) {
+    return;
+  }
+  const position = await getPositionData();
+  dispatch(
+    addOrEditExpense(tripId, {
+      ...expense,
+      position,
+    })
+  );
+}
+
+/**
+ * Get a `PositionData` object using the `geolocation` API
+ */
+async function getPositionData(): Promise<PositionData> {
   return new Promise(resolve => {
-    function coordsToPosition(coords: Coordinates): PositionData {
-      return {
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        altitude: coords.altitude,
-        accuracy: coords.accuracy,
-      };
-    }
-
     navigator.geolocation.getCurrentPosition(({ coords }) => {
-      const expense = getExpense(tripId, expenseId, getState());
-      if (!expense) {
-        return;
-      }
-
-      dispatch(
-        addOrEditExpense(tripId, {
-          ...expense,
-          position: coordsToPosition(coords),
-        })
-      );
-      resolve();
+      // returning `undefined` instead of `null` makes the values not to be stringified if they don't exist
+      resolve({
+        latitude: coords.latitude || undefined,
+        longitude: coords.longitude || undefined,
+        altitude: coords.altitude || undefined,
+        accuracy: coords.accuracy || undefined,
+      });
     });
   });
 }
