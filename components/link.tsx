@@ -5,14 +5,15 @@ import { changePage } from '../store/actions/nav';
 
 export interface Props extends LinkProps {
   page: Page;
+  tripId?: number;
 }
 
 export function Link(props: Props) {
-  const { page, ...linkProps } = props;
+  const { page, tripId, ...linkProps } = props;
   const dispatch = useDispatch();
 
   function handleClick() {
-    dispatch(changePage(page));
+    dispatch(changePage(page, tripId));
   }
 
   return (

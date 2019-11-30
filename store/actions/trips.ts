@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { ThunkActionCreator, ActionCreator } from '../index';
+import { ThunkActionCreator, ActionCreator, ThunkDispatch } from '../index';
 import { Trip, Expense, State, PositionData } from '../model';
 import {
   getNextExpenseId,
@@ -29,9 +29,6 @@ export interface RemoveExpenseAction extends Action {
   tripId: number;
   expenseId: number;
 }
-
-// don't wait more than 1 sec for the location
-const LOCATION_TIMEOUT = 1000;
 
 export const addNewTrip: ThunkActionCreator<AddNewTripAction> = (
   name: string
@@ -65,16 +62,10 @@ export const addOrEditExpense: ThunkActionCreator<AddNewExpenseAction> = (
   return async (dispatch, getState) => {
     const useGps = getIsGpsAllowed(getState());
     const expenseId = expense.id || getNextExpenseId(tripId, getState());
-    let position: PositionData;
-
-    if (useGps) {
-      position = await getPosition(dispatch, getState, tripId, expenseId);
-    }
 
     const completeExpense: Expense = {
       ...expense,
-      position,
-      time: Date.now(),
+      time: (expense && (expense as Expense).time) || Date.now(),
       id: expenseId,
     };
 
@@ -83,6 +74,11 @@ export const addOrEditExpense: ThunkActionCreator<AddNewExpenseAction> = (
       expense: completeExpense,
       type: 'EXPENSE',
     });
+
+    if (useGps && !completeExpense.position) {
+      // position data is added always afterwards, so it's not blocking
+      addPositionData(dispatch, getState, tripId, expenseId);
+    }
   };
 };
 
@@ -95,49 +91,41 @@ export const removeExpense: ActionCreator<RemoveExpenseAction> = (
   type: 'REMOVE_EXPENSE',
 });
 
-function getPosition(
-  dispatch,
+/**
+ * Add position data to an existing expense
+ */
+async function addPositionData(
+  dispatch: ThunkDispatch<AddNewExpenseAction>,
   getState: () => State,
   tripId: number,
   expenseId: number
-): Promise<PositionData> {
+): Promise<void> {
+  const expense = getExpense(tripId, expenseId, getState());
+  if (!expense) {
+    return;
+  }
+  const position = await getPositionData();
+  dispatch(
+    addOrEditExpense(tripId, {
+      ...expense,
+      position,
+    })
+  );
+}
+
+/**
+ * Get a `PositionData` object using the `geolocation` API
+ */
+async function getPositionData(): Promise<PositionData> {
   return new Promise(resolve => {
-    let hasTimedOut = false;
-
-    function coordsToPosition(coords: Coordinates): PositionData {
-      return {
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        altitude: coords.altitude,
-        accuracy: coords.accuracy,
-      };
-    }
-
-    // if timeouts, resolve to undefined
-    const timeoutHandler = setTimeout(() => {
-      resolve();
-      hasTimedOut = true;
-    }, LOCATION_TIMEOUT);
-
     navigator.geolocation.getCurrentPosition(({ coords }) => {
-      // if timed out, dispatch a modification for that action adding the location data
-      if (hasTimedOut) {
-        const expense = getExpense(tripId, expenseId, getState());
-        dispatch(
-          addOrEditExpense({
-            tripId,
-            expense: {
-              ...expense,
-              position: coordsToPosition(coords),
-            },
-          })
-        );
-        return;
-      }
-
-      // resolve with the location data
-      clearTimeout(timeoutHandler);
-      resolve(coordsToPosition(coords));
+      // returning `undefined` instead of `null` makes the values not to be stringified if they don't exist
+      resolve({
+        latitude: coords.latitude || undefined,
+        longitude: coords.longitude || undefined,
+        altitude: coords.altitude || undefined,
+        accuracy: coords.accuracy || undefined,
+      });
     });
   });
 }

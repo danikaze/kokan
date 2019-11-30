@@ -1,37 +1,56 @@
 import React, { useState } from 'react';
-import { TextField, Button, ButtonGroup } from '@material-ui/core';
+import {
+  TextField,
+  Button,
+  ButtonGroup,
+  InputAdornment,
+  Typography,
+} from '@material-ui/core';
 import { withTranslation } from 'react-i18next';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LocationOffIcon from '@material-ui/icons/LocationOff';
-import { getIsGpsAllowed } from '../store/selectors';
+import { getIsGpsAllowed, getTrip } from '../store/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { addOrEditExpense } from '../store/actions/trips';
-import { Expense } from '../store/model';
+import { Expense, Trip } from '../store/model';
 import { WithTranslation } from 'next-i18next';
 import { setSetting } from '../store/actions/settings';
+import { blueGrey } from '@material-ui/core/colors';
 
 type InputRef = React.RefObject<HTMLInputElement>;
 type TextAreaRef = React.RefObject<HTMLTextAreaElement>;
 
+const useStyles = makeStyles({
+  currencyAdornment: {
+    color: blueGrey['300'],
+    fontSize: '200%',
+  },
+});
+
 function usePriceInputForm(tripId: number) {
   const dispatch = useDispatch();
-  const [needShrink, setNeedShrink] = useState<boolean>();
+  const trip = useSelector(getTrip.bind(null, tripId)) as Trip;
+  const localCurrency = trip.localCurrency;
+  const foreignCurrency = trip.foreignCurrency;
+  const [needShrink, setNeedShrink] = useState<boolean>(false);
+  const [inputError, setInputError] = useState<boolean>(false);
   const foreignRef = React.createRef() as InputRef;
   const localRef = React.createRef() as InputRef;
   const commentRef = React.createRef() as TextAreaRef;
   let gpsAllowed = useSelector(getIsGpsAllowed);
 
   function addExpense() {
+    if (foreignRef.current.value === '' || localRef.current.value === '') {
+      setInputError(true);
+      return;
+    }
+
     const expense: Pick<Expense, 'foreignPrice' | 'localPrice' | 'comment'> = {
       foreignPrice: Number(foreignRef.current.value),
       localPrice: Number(localRef.current.value),
       comment: commentRef.current.value || undefined,
     };
-
-    if (isNaN(expense.foreignPrice) || isNaN(expense.localPrice)) {
-      return;
-    }
 
     foreignRef.current.value = '';
     localRef.current.value = '';
@@ -65,10 +84,11 @@ function usePriceInputForm(tripId: number) {
     }
 
     setNeedShrink(value !== '');
+    setInputError(false);
   }
 
   // TODO: Get this values from the State
-  const rate = 112;
+  const rate = 111;
   const foreignDecimals = 2;
   const localDecimals = 0;
 
@@ -81,6 +101,9 @@ function usePriceInputForm(tripId: number) {
     commentRef,
     handleChange,
     needShrink,
+    inputError,
+    localCurrency,
+    foreignCurrency,
   };
 }
 
@@ -98,6 +121,9 @@ const BasePriceInput = ({ t, tripId }: Props) => {
     commentRef,
     handleChange,
     needShrink,
+    inputError,
+    localCurrency,
+    foreignCurrency,
   } = usePriceInputForm(tripId);
 
   return (
@@ -108,12 +134,16 @@ const BasePriceInput = ({ t, tripId }: Props) => {
         onChange={handleChange}
         inputRef={foreignRef}
         shrink={needShrink}
+        error={inputError}
+        currencyAdornment={foreignCurrency.text}
       />
       <PriceInputField
         label={t('localValueInput')}
         onChange={handleChange}
         inputRef={localRef}
         shrink={needShrink}
+        error={inputError}
+        currencyAdornment={localCurrency.text}
       />
       <TextField
         multiline
@@ -158,9 +188,11 @@ function PriceInputField(props: {
   label: string;
   inputRef: InputRef;
   shrink?: boolean;
+  error?: boolean;
+  currencyAdornment: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
-  const { shrink, ...textFieldProps } = props;
+  const { shrink, error, currencyAdornment, ...textFieldProps } = props;
   return (
     <CSSTextField
       {...textFieldProps}
@@ -169,8 +201,21 @@ function PriceInputField(props: {
       variant="outlined"
       margin="normal"
       placeholder="123"
-      InputLabelProps={{ shrink }}
+      InputLabelProps={{ shrink, error }}
+      InputProps={{ endAdornment: getCurrencyAdornment(currencyAdornment) }}
     />
+  );
+}
+
+function getCurrencyAdornment(text: string) {
+  if (!text) return;
+
+  const classes = useStyles(undefined);
+
+  return (
+    <InputAdornment position="end">
+      <Typography className={classes.currencyAdornment}>{text}</Typography>
+    </InputAdornment>
   );
 }
 

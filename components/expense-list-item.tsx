@@ -24,7 +24,15 @@ interface Props extends WithTranslation {
   localCurrency: CurrencySettings;
 }
 
+// tslint:disable: no-magic-numbers
 const useStyles = makeStyles(theme => ({
+  details: {
+    flexDirection: 'column',
+    paddingTop: 0,
+  },
+  row: {
+    position: 'relative',
+  },
   foreignPrice: {
     fontWeight: 'bold',
     minWidth: '100px',
@@ -32,17 +40,20 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'right',
   },
   localPrice: {
+    display: 'inline-block',
     minWidth: '100px',
     marginRight: theme.spacing(1),
     textAlign: 'right',
     color: theme.palette.primary.main,
   },
+  exchangeRatio: {},
   date: {
     color: blueGrey['300'],
   },
   actions: {
     position: 'absolute',
-    right: theme.spacing(3),
+    top: 0,
+    right: 0,
   },
   position: {
     position: 'absolute',
@@ -53,6 +64,7 @@ const useStyles = makeStyles(theme => ({
     right: 0,
   },
 }));
+// tslint:enable
 
 function BaseExpenseListItem({
   tripId,
@@ -61,6 +73,11 @@ function BaseExpenseListItem({
   localCurrency,
 }: Props): JSX.Element {
   const classes = useStyles(undefined);
+  const exchangeRatioCurrency: CurrencySettings = {
+    decimals: 2,
+    text: `${localCurrency.text}/${foreignCurrency.text}: `,
+    prepend: true,
+  };
 
   return (
     <ExpansionPanel key={expense.id}>
@@ -72,14 +89,25 @@ function BaseExpenseListItem({
         />
         <Typography>{expense.comment}</Typography>
       </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <Price
-          className={classes.localPrice}
-          quantity={expense.localPrice}
-          currency={localCurrency}
-        />
-        {getExpenseDate(expense.time)}
-        {getActionIcons(tripId, expense)}
+      <ExpansionPanelDetails className={classes.details}>
+        <div className={classes.row}>
+          <Price
+            className={classes.localPrice}
+            quantity={expense.localPrice}
+            currency={localCurrency}
+          />
+          (
+          <Price
+            className={classes.exchangeRatio}
+            quantity={expense.localPrice / expense.foreignPrice}
+            currency={exchangeRatioCurrency}
+          />
+          )
+        </div>
+        <div className={classes.row}>
+          {getExpenseDate(expense.time)}
+          {getActionIcons(tripId, expense)}
+        </div>
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );

@@ -3,6 +3,7 @@ import { State, Page } from './model';
 const urlMappings: { [pathname: string]: Page } = {
   '/': 'home',
   '/new-trip': 'newTrip',
+  '/trip': 'trip',
 };
 
 export function getInitialState(pathname: string): State {
@@ -18,8 +19,8 @@ export function getInitialState(pathname: string): State {
       lang: 'en',
       gps: false,
     },
-    currentPage: urlMappings[pathname] || 'error',
     ui: {
+      currentPage: urlMappings[pathname] || 'error',
       menu: {
         isOpen: false,
         travelListOpen: true,

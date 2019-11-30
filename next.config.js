@@ -2,6 +2,8 @@ const packageJson = require('./package.json');
 
 const withTypeScript = require('@zeit/next-typescript');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const gitRevisionPlugin = new GitRevisionPlugin();
 
 let config = {
   exportPathMap: async function() {
@@ -17,9 +19,14 @@ let config = {
     };
 
     config.plugins.push(
+      gitRevisionPlugin,
       new webpack.DefinePlugin({
         PACKAGE_NAME: JSON.stringify(packageJson.name),
         PACKAGE_VERSION: JSON.stringify(packageJson.version),
+        COMMIT_HASH: JSON.stringify(gitRevisionPlugin.commithash()),
+        COMMIT_HASH_SHORT: JSON.stringify(
+          gitRevisionPlugin.commithash().substr(0, 7)
+        ),
         IS_SERVER: isServer,
         IS_PRODUCTION: process.env.NODE_ENV === 'production',
       })

@@ -19,6 +19,8 @@ export interface UserSettings {
 }
 
 export interface Ui {
+  currentPage: Page;
+  selectedTripId?: number;
   menu: {
     isOpen: boolean;
     travelListOpen: boolean;
@@ -26,8 +28,8 @@ export interface Ui {
 }
 
 export interface CurrencySettings {
-  text: string;
-  decimals: number;
+  text?: string;
+  decimals?: number;
   prepend?: boolean;
 }
 
@@ -54,6 +56,8 @@ export interface Trip {
   name: string;
   createdOn: number;
   updatedOn: number;
+  foreignCurrency: CurrencySettings;
+  localCurrency: CurrencySettings;
   exchanges: Exchange[];
   expenses: Expense[];
 }
@@ -61,7 +65,6 @@ export interface Trip {
 export interface State {
   settings: Settings;
   userSettings: UserSettings;
-  currentPage: Page;
   ui: Ui;
   trips: Trip[];
 }

@@ -45,7 +45,7 @@ function BaseAppTitle(): JSX.Element {
           <MenuIcon />
         </IconButton>
         <Typography className={classes.title} variant="h6" display="inline">
-          {APP_TITLE} {PACKAGE_VERSION}
+          {APP_TITLE} {PACKAGE_VERSION}-{COMMIT_HASH_SHORT}
         </Typography>
       </Toolbar>
     </AppBar>
